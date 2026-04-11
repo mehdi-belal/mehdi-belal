@@ -67,6 +67,22 @@ def stat_block(title: str, totals: dict) -> tuple[str, str, str]:
     return title, f"{count} activities", f"{distance} • {elevation}"
 
 
+def longest_ride_block(activities: list[dict]) -> tuple[str, str, str]:
+    rides = [
+        activity
+        for activity in activities
+        if str(activity.get("type", "")).lower() == "ride"
+    ]
+    if not rides:
+        return "Longest ride", "Unavailable", "Requires public ride activity data"
+
+    longest = max(rides, key=lambda activity: float(activity.get("distance", 0)))
+    name = str(longest.get("name", "Untitled ride")).strip() or "Untitled ride"
+    distance = fmt_distance(float(longest.get("distance", 0)))
+    date = fmt_activity_date(longest.get("start_date_local") or longest.get("start_date") or "")
+    return "Longest ride", html.escape(name), f"{distance} • {date}"
+
+
 def write_github_output(name: str, value: str) -> None:
     output_path = os.getenv("GITHUB_OUTPUT", "").strip()
     if not output_path:
@@ -81,44 +97,21 @@ def build_svg(athlete: dict, stats: dict, activities: list[dict], activities_una
     location = html.escape(", ".join(part for part in location_parts if part))
     generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
-    blocks = [
-        stat_block("Ride YTD", stats.get("ytd_ride_totals", {})),
-        stat_block("Run YTD", stats.get("ytd_run_totals", {})),
-        stat_block("Swim YTD", stats.get("ytd_swim_totals", {})),
-    ]
-
-    activity_lines: list[str] = []
-    for activity in activities[:3]:
-        name = html.escape(activity.get("name", "Untitled activity"))
-        kind = html.escape(activity.get("type", "Activity"))
-        distance = fmt_distance(float(activity.get("distance", 0)))
-        date = fmt_activity_date(activity.get("start_date_local") or activity.get("start_date") or "")
-        activity_lines.append(f"{kind}: {name} • {distance} • {date}")
-
-    if not activity_lines and activities_unavailable_reason:
-        activity_lines.append(activities_unavailable_reason)
-    if not activity_lines:
-        activity_lines.append("No recent public activities returned by the API.")
-
-    lines_svg = []
-    line_y = 236
-    for line in activity_lines:
-        lines_svg.append(
-            f'<text x="44" y="{line_y}" fill="#334155" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="18">{line}</text>'
-        )
-        line_y += 28
+    ride_block = stat_block("Ride YTD", stats.get("ytd_ride_totals", {}))
+    longest_block = longest_ride_block(activities)
+    activity_note = activities_unavailable_reason or "Longest ride is derived from recent public ride activities."
 
     block_x = 44
     blocks_svg = []
-    for title, line_one, line_two in blocks:
+    for title, line_one, line_two in [ride_block, longest_block]:
         blocks_svg.append(
             f"""
-  <rect x="{block_x}" y="88" width="212" height="92" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <rect x="{block_x}" y="92" width="300" height="110" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
   <text x="{block_x + 20}" y="118" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="20">{html.escape(title)}</text>
   <text x="{block_x + 20}" y="146" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="24" font-weight="600">{html.escape(line_one)}</text>
-  <text x="{block_x + 20}" y="168" fill="#475569" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="16">{html.escape(line_two)}</text>"""
+  <text x="{block_x + 20}" y="172" fill="#475569" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="16">{html.escape(line_two)}</text>"""
         )
-        block_x += 228
+        block_x += 316
 
     location_svg = ""
     if location:
@@ -126,15 +119,14 @@ def build_svg(athlete: dict, stats: dict, activities: list[dict], activities_una
 
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="720" height="340" viewBox="0 0 720 340" role="img" aria-labelledby="title desc">
   <title id="title">Strava activity summary</title>
-  <desc id="desc">Generated summary card for Strava yearly totals and recent activities.</desc>
+  <desc id="desc">Generated summary card for Strava ride totals and longest ride.</desc>
   <rect width="720" height="340" rx="24" fill="#ffffff"/>
   <rect x="1" y="1" width="718" height="338" rx="23" fill="none" stroke="#E2E8F0"/>
   <text x="44" y="42" fill="#FC4C02" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="28" font-weight="700">STRAVA</text>
   <text x="162" y="42" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="28">{athlete_name}</text>
   {location_svg}
   {''.join(blocks_svg)}
-  <text x="44" y="214" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="20">Recent activities</text>
-  {''.join(lines_svg)}
+  <text x="44" y="250" fill="#475569" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="18">{html.escape(activity_note)}</text>
   <text x="676" y="318" text-anchor="end" fill="#94A3B8" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="14">Updated {generated_at}</text>
 </svg>
 """
