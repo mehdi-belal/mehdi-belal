@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="320" viewBox="0 0 640 320" role="img" aria-labelledby="title desc">
+  <title id="title">Top languages placeholder</title>
+  <desc id="desc">Placeholder card shown until the Update README cards workflow runs.</desc>
+  <rect width="640" height="320" fill="#111827" rx="18" />
+  <rect x="16" y="16" width="608" height="288" fill="#0f172a" rx="14" stroke="#334155" />
+  <text x="40" y="82" fill="#e5e7eb" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700">Top Languages</text>
+  <text x="40" y="132" fill="#86efac" font-family="Arial, Helvetica, sans-serif" font-size="20">Generated card will appear here after the workflow runs.</text>
+  <text x="40" y="176" fill="#cbd5e1" font-family="Arial, Helvetica, sans-serif" font-size="18">Workflow: .github/workflows/update_cards.yml</text>
+  <text x="40" y="210" fill="#cbd5e1" font-family="Arial, Helvetica, sans-serif" font-size="18">Output: profile/top-langs.svg</text>
+  <text x="40" y="262" fill="#64748b" font-family="Arial, Helvetica, sans-serif" font-size="16">The README uses local SVG files so it still renders before automation.</text>
+</svg>
