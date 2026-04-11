@@ -1,3 +1,5 @@
+# Hi there! 👋
+
 <p align="center">
   <a href="https://www.linkedin.com/in/mehdi-belal-479889146/">
     <img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&amp;logo=linkedin&amp;logoColor=white" />
@@ -6,6 +8,8 @@
     <img alt="Google Scholar" src="https://img.shields.io/badge/Google_Scholar-4285F4?style=for-the-badge&amp;logo=googlescholar&amp;logoColor=white" />
   </a>
 </p>
+
+---
 
 <div align="center">
 
@@ -40,6 +44,8 @@
   <img alt="Google AI Studio" src="https://img.shields.io/badge/Google_AI_Studio-4285F4?style=for-the-badge&amp;logo=google&amp;logoColor=white" />
 </p>
 
+---
+
 <div align="center">
 
   ![Strava](svg/strava.svg)
@@ -48,6 +54,6 @@
 
 <div align="center">
 
-<img src="./profile/strava.svg" height="220" title="Strava activity summary" alt="Strava activity summary"/>
+<img src="./profile/strava.svg" height="300" title="Strava activity summary" alt="Strava activity summary"/>
 
 </div>
