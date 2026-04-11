@@ -39,3 +39,15 @@
   <img alt="Rust" src="https://img.shields.io/badge/Rust-000000?style=for-the-badge&amp;logo=rust&amp;logoColor=white" />
   <img alt="Google AI Studio" src="https://img.shields.io/badge/Google_AI_Studio-4285F4?style=for-the-badge&amp;logo=google&amp;logoColor=white" />
 </p>
+
+<div align="center">
+
+  ![Strava](svg/strava.svg)
+
+</div>
+
+<div align="center">
+
+<img src="./profile/strava.svg" height="220" title="Strava activity summary" alt="Strava activity summary"/>
+
+</div>

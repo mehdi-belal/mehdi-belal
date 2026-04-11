@@ -1,0 +1,55 @@
+name: Update Strava card
+
+on:
+  schedule:
+    - cron: "23 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-strava-card
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Generate Strava card
+        id: strava
+        env:
+          STRAVA_CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
+          STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
+          STRAVA_REFRESH_TOKEN: ${{ secrets.STRAVA_REFRESH_TOKEN }}
+        run: python scripts/update_strava.py
+
+      - name: Persist rotated Strava refresh token
+        env:
+          GH_TOKEN: ${{ secrets.GH_REPO_SECRET_TOKEN }}
+          NEW_STRAVA_REFRESH_TOKEN: ${{ steps.strava.outputs.refresh_token }}
+        run: |
+          if [ -n "$GH_TOKEN" ]; then
+            gh secret set STRAVA_REFRESH_TOKEN --repo "$GITHUB_REPOSITORY" --body "$NEW_STRAVA_REFRESH_TOKEN"
+          else
+            echo "::warning::GH_REPO_SECRET_TOKEN is not set. Strava may rotate the refresh token, so future scheduled runs can fail after this one."
+          fi
+
+      - name: Commit Strava card
+        run: |
+          git config user.name "${{ github.repository_owner }}"
+          git config user.email "${{ github.repository_owner_id }}+${{ github.repository_owner }}@users.noreply.github.com"
+          git add profile/strava.svg
+          git diff --cached --quiet && exit 0
+          git commit -m "Update Strava card"
+          git push
