@@ -34,6 +34,15 @@ def request_json(url: str, method: str = "GET", data: dict | None = None, header
         raise RuntimeError(f"HTTP {exc.code} calling {url}: {details}") from exc
 
 
+def is_missing_activity_read(exc: RuntimeError) -> bool:
+    message = str(exc)
+    return (
+        "https://www.strava.com/api/v3/athlete/activities" in message
+        and "activity:read_permission" in message
+        and "missing" in message
+    )
+
+
 def fmt_distance(meters: float) -> str:
     if meters >= 1000:
         return f"{meters / 1000:.1f} km"
@@ -66,7 +75,7 @@ def write_github_output(name: str, value: str) -> None:
         handle.write(f"{name}={value}\n")
 
 
-def build_svg(athlete: dict, stats: dict, activities: list[dict]) -> str:
+def build_svg(athlete: dict, stats: dict, activities: list[dict], activities_unavailable_reason: str = "") -> str:
     athlete_name = html.escape(f"{athlete.get('firstname', '')} {athlete.get('lastname', '')}".strip() or "Strava Athlete")
     location_parts = [athlete.get("city", ""), athlete.get("state", ""), athlete.get("country", "")]
     location = html.escape(", ".join(part for part in location_parts if part))
@@ -86,6 +95,8 @@ def build_svg(athlete: dict, stats: dict, activities: list[dict]) -> str:
         date = fmt_activity_date(activity.get("start_date_local") or activity.get("start_date") or "")
         activity_lines.append(f"{kind}: {name} • {distance} • {date}")
 
+    if not activity_lines and activities_unavailable_reason:
+        activity_lines.append(activities_unavailable_reason)
     if not activity_lines:
         activity_lines.append("No recent public activities returned by the API.")
 
@@ -151,12 +162,22 @@ def main() -> int:
     athlete = request_json("https://www.strava.com/api/v3/athlete", headers=headers)
     athlete_id = athlete["id"]
     stats = request_json(f"https://www.strava.com/api/v3/athletes/{athlete_id}/stats", headers=headers)
-    activities = request_json(
-        "https://www.strava.com/api/v3/athlete/activities?per_page=3&page=1",
-        headers=headers,
-    )
+    activities: list[dict] = []
+    activities_unavailable_reason = ""
+    try:
+        fetched_activities = request_json(
+            "https://www.strava.com/api/v3/athlete/activities?per_page=3&page=1",
+            headers=headers,
+        )
+        if isinstance(fetched_activities, list):
+            activities = fetched_activities
+    except RuntimeError as exc:
+        if is_missing_activity_read(exc):
+            activities_unavailable_reason = "Recent activities unavailable: token is missing activity:read scope."
+        else:
+            raise
 
-    svg = build_svg(athlete, stats, activities if isinstance(activities, list) else [])
+    svg = build_svg(athlete, stats, activities, activities_unavailable_reason)
     os.makedirs("profile", exist_ok=True)
     with open("profile/strava.svg", "w", encoding="utf-8") as handle:
         handle.write(svg)
