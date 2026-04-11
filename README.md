@@ -2,10 +2,11 @@
 
 <p align="center">
   <a href="https://www.linkedin.com/in/mehdi-belal-479889146/">
-    <img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&amp;logo=linkedin&amp;logoColor=white" />
+    <img alt="LinkedIn" src="svg/linkedin_square.svg" width="70" />
   </a>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <a href="https://scholar.google.com/citations?hl=en&amp;view_op=list_works&amp;gmla=AEk_c1tkez4YgGb2QBMrzeqxYmop4KYeLMjGlUtcD974S-UPqoPyNvic_blUq1uLLdzJgA5J1y1LTMA7bn29WA&amp;user=S-A2HosAAAAJ">
-    <img alt="Google Scholar" src="https://img.shields.io/badge/Google_Scholar-4285F4?style=for-the-badge&amp;logo=googlescholar&amp;logoColor=white" />
+    <img alt="Google Scholar" src="svg/google_scholar_square.svg" width="70" />
   </a>
 </p>
 
@@ -57,3 +58,9 @@
 <img src="./profile/strava.svg" height="300" title="Strava activity summary" alt="Strava activity summary"/>
 
 </div>
+
+# About this repo
+
+[![Codeberg sync](https://github.com/mehdi-belal/mehdi-belal/actions/workflows/codeberg-sync.yml/badge.svg)](https://github.com/mehdi-belal/mehdi-belal/actions/workflows/codeberg-sync.yml)
+[![Update Strava card](https://github.com/mehdi-belal/mehdi-belal/actions/workflows/update_strava.yml/badge.svg)](https://github.com/mehdi-belal/mehdi-belal/actions/workflows/update_strava.yml)
+[![Update README cards](https://github.com/mehdi-belal/mehdi-belal/actions/workflows/update_cards.yml/badge.svg)](https://github.com/mehdi-belal/mehdi-belal/actions/workflows/update_cards.yml)
