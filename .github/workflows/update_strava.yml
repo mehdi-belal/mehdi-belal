@@ -35,16 +35,15 @@ jobs:
         run: python scripts/update_strava.py
 
       - name: Persist rotated Strava refresh token
-        if: ${{ secrets.GH_REPO_SECRET_TOKEN != '' }}
         env:
           GH_TOKEN: ${{ secrets.GH_REPO_SECRET_TOKEN }}
+          NEW_STRAVA_REFRESH_TOKEN: ${{ steps.strava.outputs.refresh_token }}
         run: |
-          gh secret set STRAVA_REFRESH_TOKEN --repo "$GITHUB_REPOSITORY" --body "${{ steps.strava.outputs.refresh_token }}"
-
-      - name: Warn when refresh-token rotation secret is missing
-        if: ${{ secrets.GH_REPO_SECRET_TOKEN == '' }}
-        run: |
-          echo "::warning::GH_REPO_SECRET_TOKEN is not set. Strava may rotate the refresh token, so future scheduled runs can fail after this one."
+          if [ -n "$GH_TOKEN" ]; then
+            gh secret set STRAVA_REFRESH_TOKEN --repo "$GITHUB_REPOSITORY" --body "$NEW_STRAVA_REFRESH_TOKEN"
+          else
+            echo "::warning::GH_REPO_SECRET_TOKEN is not set. Strava may rotate the refresh token, so future scheduled runs can fail after this one."
+          fi
 
       - name: Commit Strava card
         run: |
