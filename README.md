@@ -25,7 +25,6 @@
 
 <div align="center">
 
-<img src="./profile/stats.svg" height="150" title="GitHub Stats" alt="GitHub Stats"/>
 <img src="./profile/top-langs.svg" height="150" title="Github Top languages" alt="Github Top languages"/>
 
 </div>
