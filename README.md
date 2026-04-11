@@ -49,7 +49,7 @@
 
 <div align="center">
 
-  ![Strava](svg/strava.svg)
+  ![Strava](svg/strava.svg) 🚴‍♂️
 
 </div>
 
