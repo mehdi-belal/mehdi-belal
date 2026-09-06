@@ -68,10 +68,14 @@ def fit(draw, value, size, width):
 
 @lru_cache(maxsize=8)
 def logo_image(path):
-    result = subprocess.run(
-        ["/usr/bin/python3", str(ROOT / "scripts/rasterize_logo.py"), str(ROOT / path)],
-        check=True, capture_output=True,
-    )
+    try:
+        result = subprocess.run(
+            ["/usr/bin/python3", str(ROOT / "scripts/rasterize_logo.py"), str(ROOT / path)],
+            check=True, capture_output=True,
+        )
+    except subprocess.CalledProcessError as exc:
+        details = (exc.stderr or b"").decode("utf-8", errors="replace").strip()
+        raise RuntimeError(f"Could not render logo {path}:\n{details}") from exc
     logo = Image.open(io.BytesIO(result.stdout)).convert("RGBA")
     bounds = logo.getbbox()
     if not bounds:

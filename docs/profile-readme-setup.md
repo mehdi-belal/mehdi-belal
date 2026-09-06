@@ -35,7 +35,7 @@ the fingerprint.
 Requires Python 3.10+ and the DejaVu Sans Mono regular/bold fonts. On Ubuntu:
 
 ```bash
-sudo apt-get install fonts-dejavu-core python3-gi python3-cairo gir1.2-rsvg-2
+sudo apt-get install fonts-dejavu-core python3-gi python3-gi-cairo python3-cairo gir1.2-rsvg-2
 python3 -m venv .venv
 .venv/bin/pip install -r scripts/requirements.txt
 .venv/bin/python -m unittest discover -s tests -v

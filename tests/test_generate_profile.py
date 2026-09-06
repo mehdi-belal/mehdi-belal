@@ -1,3 +1,5 @@
+import json
+import subprocess
 import importlib.util
 from pathlib import Path
 import unittest
@@ -26,6 +28,24 @@ class DataTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 m.main()
             render.assert_not_called()
+
+    def test_configured_logos_render(self):
+        config = json.loads((m.PROFILE / "config.json").read_text())
+        m.logo_image.cache_clear()
+        for entry in config["work"] + config["academic"]:
+            with self.subTest(logo=entry["logo"]):
+                logo = m.logo_image(entry["logo"])
+                self.assertIsNotNone(logo.getbbox())
+                self.assertLessEqual(logo.width, 290)
+                self.assertLessEqual(logo.height, 100)
+
+    def test_logo_failure_exposes_stderr(self):
+        failure = subprocess.CalledProcessError(
+            1, ["rasterize_logo.py"], stderr=b"ImportError: missing Cairo integration"
+        )
+        with patch.object(m.subprocess, "run", side_effect=failure):
+            with self.assertRaisesRegex(RuntimeError, "missing Cairo integration"):
+                m.logo_image("missing-test-logo.svg")
 
     def test_empty_languages_render(self):
         config = {"username": "sample", "name": "Sample", "tagline": "Robotics", "skills": ["C++"], "learning": ["Rust"]}
