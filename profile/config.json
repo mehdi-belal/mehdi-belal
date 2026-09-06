@@ -1,0 +1,47 @@
+{
+  "username": "mehdi-belal",
+  "name": "Mehdi Belal",
+  "tagline": "AI. Perception. Robotics.",
+  "skills": [
+    "C++",
+    "Python",
+    "ROS 2",
+    "OpenCV",
+    "Linux",
+    "Docker",
+    "CI/CD"
+  ],
+  "learning": [
+    "Rust",
+    "Google AI Studio"
+  ],
+  "exclude_repositories": [
+    "mehdi-belal"
+  ],
+  "work": [
+    {
+      "company": "SIRB.AI",
+      "role": "Director - Software",
+      "logo": "assets/sirbai_logo.svg"
+    },
+    {
+      "company": "TII",
+      "role": "Principal Engineer",
+      "logo": "assets/tii-logo.svg"
+    }
+  ],
+  "academic": [
+    {
+      "degree": "Ph.D.",
+      "field": "Swarm Robotics",
+      "institution": "UNIMORE",
+      "logo": "assets/unimore-logo.svg"
+    },
+    {
+      "degree": "Master’s",
+      "field": "Robotics Engineering",
+      "institution": "UniPG",
+      "logo": "assets/unipg-logo.svg"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+# Python environments and caches
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Local credentials (keep sanitized examples shareable)
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Local editor and agent settings
+.vscode/
+.idea/
+/.codex/
+/.agents/
+*.swp
+*.swo
+*~
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Profile GIF, config, public data, and fingerprint stay tracked.
