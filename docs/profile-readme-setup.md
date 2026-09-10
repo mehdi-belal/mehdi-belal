@@ -57,18 +57,11 @@ for `all_accessible` mode. Set `PROFILE_FONT_DIR` if fonts are installed somewhe
 other than `/usr/share/fonts/truetype/dejavu`.
 Use `--offline` to regenerate from `profile/data.json` without network access.
 
-## Codeberg mirror
-
-The existing sync workflow uses the `CODEBERG_TOKEN` repository secret. It runs
-on pushes, manually, and after a successful profile-animation workflow on the
-default branch. This completion trigger is needed because commits made with
-`GITHUB_TOKEN` do not trigger another push workflow.
-
 ## Removed integration
 
-The former fitness integration and SVG card workflows have been removed.
-Their old repository secrets are no longer used; repository administrators can
-remove those credentials from GitHub settings.
+The former fitness integration, SVG card workflows, and Codeberg mirror have
+been removed. Their old repository secrets are no longer used; repository
+administrators can remove those credentials from GitHub settings.
 
 ## Current work scene
 
