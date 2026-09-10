@@ -4,7 +4,7 @@ import subprocess
 import importlib.util
 from pathlib import Path
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 spec = importlib.util.spec_from_file_location("profile_renderer", Path(__file__).resolve().parents[1] / "scripts/generate_profile.py")
 m = importlib.util.module_from_spec(spec)
@@ -12,6 +12,13 @@ spec.loader.exec_module(m)
 
 
 class DataTests(unittest.TestCase):
+    def test_api_treats_an_empty_response_as_pending(self):
+        response = MagicMock(status=200)
+        response.read.return_value = b""
+        with patch.object(m.urllib.request, "urlopen") as urlopen:
+            urlopen.return_value.__enter__.return_value = response
+            self.assertIsNone(m.api("/repos/sample/robot/stats/contributors"))
+
     def test_pagination_filters_and_language_totals(self):
         config = {"username": "sample", "exclude_repositories": ["profile"]}
         def repo(name, **extra):

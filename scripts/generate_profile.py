@@ -33,7 +33,10 @@ def api(path):
     with urllib.request.urlopen(request, timeout=30) as response:
         if response.status == 202:
             return None
-        return json.load(response)
+        body = response.read()
+        if not body.strip():
+            return None
+        return json.loads(body)
 
 
 def fetch_data(config):
