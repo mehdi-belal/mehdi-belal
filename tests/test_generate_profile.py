@@ -1,4 +1,5 @@
 import json
+import os
 import subprocess
 import importlib.util
 from pathlib import Path
@@ -22,6 +23,35 @@ class DataTests(unittest.TestCase):
         self.assertIn("page=2", api.call_args_list[1].args[0])
         self.assertEqual(result["languages"], {"C++": 60, "Python": 40})
         self.assertEqual(result["repository_count"], 2)
+
+    def test_all_accessible_includes_private_and_collaborator_repositories(self):
+        config = {
+            "username": "sample", "repository_scope": "all_accessible",
+            "exclude_repositories": ["profile"],
+        }
+        def repo(name, owner, **extra):
+            result = dict(name=name, owner={"login": owner}, fork=False)
+            result.update(extra)
+            return result
+        repositories = [
+            repo("private", "sample", private=True),
+            repo("team-project", "org", private=True),
+            repo("profile", "sample", private=False),
+            repo("fork", "sample", fork=True),
+            repo("archive", "sample", archived=True),
+        ]
+        with patch.dict(os.environ, {"GH_TOKEN": "test-token"}, clear=False), \
+             patch.object(m, "api", side_effect=[repositories, {"Python": 30}, {"C++": 70}]) as api:
+            result = m.fetch_data(config)
+        self.assertIn("/user/repos?visibility=all&affiliation=owner,collaborator,organization_member", api.call_args_list[0].args[0])
+        self.assertEqual(result["languages"], {"C++": 70, "Python": 30})
+        self.assertEqual(result["repository_count"], 2)
+
+    def test_all_accessible_requires_token(self):
+        config = {"username": "sample", "repository_scope": "all_accessible", "exclude_repositories": []}
+        with patch.dict(os.environ, {}, clear=True):
+            with self.assertRaisesRegex(RuntimeError, "GH_TOKEN is required"):
+                m.fetch_data(config)
 
     def test_api_failure_does_not_publish(self):
         with patch.object(m, "fetch_data", side_effect=RuntimeError("API unavailable")), patch.object(m, "render") as render, patch("sys.argv", ["generate_profile.py"]):

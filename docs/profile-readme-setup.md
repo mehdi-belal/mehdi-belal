@@ -10,19 +10,24 @@ current roles, academic background, and repositories excluded from statistics.
 The README shows the animation first, followed by contact buttons and workflow
 badges. Edit contact destinations in `README.md`; button artwork lives in `assets/`.
 
-The GitHub API supplies language byte totals. Pagination
-includes all public owned repositories; forks, archived repositories, and the
-profile itself are excluded. The five largest languages are shown as shares of
-all included language bytes, so their percentages may total less than 100%.
-No private repository data or tokens are written to the snapshot.
+The GitHub API supplies language byte totals. `repository_scope` controls the
+coverage: `all_accessible` includes every repository the authenticated account
+can access (owned, collaborator, and organization repositories, including
+private ones); `owned_public` is the legacy public-only mode. Forks, archived
+repositories, and entries in `exclude_repositories` are excluded. The five
+largest languages are shown as shares of all included language bytes, so their
+percentages may total less than 100%. No repository names, source code, private
+metadata, or tokens are written to the public snapshot.
 
 ## Automatic updates
 
 `.github/workflows/update_profile.yml` runs Mondays at 02:00 UTC, manually, and
-when renderer/configuration files change on main or master. It installs Pillow
-and DejaVu fonts, runs tests, fetches data using the built-in `GITHUB_TOKEN`, and
-commits changed output. No personal token is needed. Repository rules must allow
-the workflow to push to the default branch.
+when renderer/configuration files change on main, master, or dev. It installs Pillow
+and DejaVu fonts, runs tests, fetches data using the `PROFILE_ANALYTICS_TOKEN`
+repository secret, and commits changed output. In `all_accessible` mode, this
+token is required and must be authorized for every private or organization
+repository intended for inclusion. Repository rules must allow the workflow to
+push to the default branch.
 
 The output is `profile/terminal.gif`, a 960 × 480, approximately 22-second loop,
 plus a public data snapshot and a rendering fingerprint. Unchanged
@@ -42,8 +47,9 @@ python3 -m venv .venv
 .venv/bin/python scripts/generate_profile.py
 ```
 
-Set `GH_TOKEN` for a higher GitHub API rate limit. Set `PROFILE_FONT_DIR` if fonts
-are installed somewhere other than `/usr/share/fonts/truetype/dejavu`.
+Set `GH_TOKEN` to a token with access to the intended repositories; it is required
+for `all_accessible` mode. Set `PROFILE_FONT_DIR` if fonts are installed somewhere
+other than `/usr/share/fonts/truetype/dejavu`.
 Use `--offline` to regenerate from `profile/data.json` without network access.
 
 ## Codeberg mirror

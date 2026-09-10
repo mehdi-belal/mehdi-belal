@@ -5,7 +5,7 @@ on:
     - cron: "0 2 * * 1"
   workflow_dispatch:
   push:
-    branches: [main, master]
+    branches: [main, master, dev]
     paths:
       - profile/config.json
       - assets/**
@@ -42,7 +42,7 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: Generate animation
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.PROFILE_ANALYTICS_TOKEN }}
         run: python scripts/generate_profile.py
       - name: Commit animation
         run: |

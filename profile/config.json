@@ -15,6 +15,7 @@
     "Rust",
     "Google AI Studio"
   ],
+  "repository_scope": "all_accessible",
   "exclude_repositories": [
     "mehdi-belal"
   ],

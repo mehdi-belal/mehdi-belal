@@ -35,20 +35,33 @@ def api(path):
 
 def fetch_data(config):
     owner = urllib.parse.quote(config["username"], safe="")
+    scope = config.get("repository_scope", "owned_public")
+    if scope not in {"owned_public", "all_accessible"}:
+        raise ValueError("repository_scope must be 'owned_public' or 'all_accessible'")
+    if scope == "all_accessible" and not os.environ.get("GH_TOKEN"):
+        raise RuntimeError("GH_TOKEN is required when repository_scope is 'all_accessible'")
+
     repos = []
     page = 1
     while True:
-        batch = api(f"/users/{owner}/repos?type=owner&per_page=100&page={page}")
+        if scope == "all_accessible":
+            path = "/user/repos?visibility=all&affiliation=owner,collaborator,organization_member"
+        else:
+            path = f"/users/{owner}/repos?type=owner"
+        batch = api(f"{path}&per_page=100&page={page}")
         repos.extend(batch)
         if len(batch) < 100:
             break
         page += 1
-    repos = [r for r in repos if not r.get("private") and not r["fork"]
-             and not r.get("archived") and r["name"] not in config["exclude_repositories"]]
+    excluded = set(config["exclude_repositories"])
+    repos = [r for r in repos if not r["fork"] and not r.get("archived")
+             and (scope == "all_accessible" or not r.get("private"))
+             and r["name"] not in excluded and r.get("full_name") not in excluded]
     languages = Counter()
     for repo in sorted(repos, key=lambda r: r["name"]):
+        repo_owner = urllib.parse.quote(repo.get("owner", {}).get("login", config["username"]), safe="")
         name = urllib.parse.quote(repo["name"], safe="")
-        languages.update(api(f"/repos/{owner}/{name}/languages"))
+        languages.update(api(f"/repos/{repo_owner}/{name}/languages"))
     return {"languages": dict(sorted(languages.items(), key=lambda item: (-item[1], item[0]))),
             "repository_count": len(repos)}
 
