@@ -44,5 +44,8 @@
     "Scheme": 102,
     "GDB": 41
   },
-  "repository_count": 136
+  "repository_count": 136,
+  "lines_added_365_days": 17250,
+  "line_stats_repositories": 19,
+  "line_stats_pending": 117
 }
