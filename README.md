@@ -11,6 +11,5 @@
 </p>
 
 [![Update profile animation](https://github.com/mehdi-belal/mehdi-belal/actions/workflows/update_profile.yml/badge.svg)](https://github.com/mehdi-belal/mehdi-belal/actions/workflows/update_profile.yml)
-[![Codeberg sync](https://github.com/mehdi-belal/mehdi-belal/actions/workflows/codeberg-sync.yml/badge.svg)](https://github.com/mehdi-belal/mehdi-belal/actions/workflows/codeberg-sync.yml)
 
 Inspired by [guilyx’s profile](https://github.com/guilyx/guilyx).
