@@ -16,8 +16,13 @@ can access (owned, collaborator, and organization repositories, including
 private ones); `owned_public` is the legacy public-only mode. Forks, archived
 repositories, and entries in `exclude_repositories` are excluded. The five
 largest languages are shown as shares of all included language bytes, so their
-percentages may total less than 100%. No repository names, source code, private
-metadata, or tokens are written to the public snapshot.
+percentages may total less than 100%. The animation also shows additions authored
+by the configured account during the preceding 365 days, based on GitHub's weekly
+contributor statistics. No repository names, source code, private metadata, or
+tokens are written to the public snapshot.
+GitHub may prepare a repository's contributor statistics asynchronously; while
+that happens, the card identifies the number of repositories still pending and
+the next scheduled run fills them in.
 
 ## Automatic updates
 

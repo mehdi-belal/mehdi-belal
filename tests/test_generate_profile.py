@@ -18,7 +18,7 @@ class DataTests(unittest.TestCase):
             return dict(name=name, fork=False, language="Python", description="Example", **extra)
         first = [repo("robot"), repo("profile"), repo("archived", archived=True), repo("secret", private=True)]
         first += [dict(name=f"fork{i}", fork=True) for i in range(96)]
-        with patch.object(m, "api", side_effect=[first, [repo("vision")], {"Python": 30}, {"Python": 10, "C++": 60}]) as api:
+        with patch.object(m, "api", side_effect=[first, [repo("vision")], {"Python": 30}, [], {"Python": 10, "C++": 60}, []]) as api:
             result = m.fetch_data(config)
         self.assertIn("page=2", api.call_args_list[1].args[0])
         self.assertEqual(result["languages"], {"C++": 60, "Python": 40})
@@ -41,7 +41,7 @@ class DataTests(unittest.TestCase):
             repo("archive", "sample", archived=True),
         ]
         with patch.dict(os.environ, {"GH_TOKEN": "test-token"}, clear=False), \
-             patch.object(m, "api", side_effect=[repositories, {"Python": 30}, {"C++": 70}]) as api:
+             patch.object(m, "api", side_effect=[repositories, {"Python": 30}, [], {"C++": 70}, []]) as api:
             result = m.fetch_data(config)
         self.assertIn("/user/repos?visibility=all&affiliation=owner,collaborator,organization_member", api.call_args_list[0].args[0])
         self.assertEqual(result["languages"], {"C++": 70, "Python": 30})
@@ -52,6 +52,19 @@ class DataTests(unittest.TestCase):
         with patch.dict(os.environ, {}, clear=True):
             with self.assertRaisesRegex(RuntimeError, "GH_TOKEN is required"):
                 m.fetch_data(config)
+
+    def test_lines_added_counts_only_the_configured_author_in_the_last_year(self):
+        config = {"username": "sample", "exclude_repositories": []}
+        repository = {"name": "robot", "fork": False}
+        activity = [
+            {"author": {"login": "sample"}, "weeks": [{"w": 39_000_000, "a": 42}, {"w": 0, "a": 999}]},
+            {"author": {"login": "someone-else"}, "weeks": [{"w": 39_000_000, "a": 100}]},
+        ]
+        with patch.object(m.time, "time", return_value=40_000_000), \
+             patch.object(m, "api", side_effect=[[repository], {"Python": 1}, activity]):
+            result = m.fetch_data(config)
+        self.assertEqual(result["lines_added_365_days"], 42)
+        self.assertEqual(result["line_stats_repositories"], 1)
 
     def test_api_failure_does_not_publish(self):
         with patch.object(m, "fetch_data", side_effect=RuntimeError("API unavailable")), patch.object(m, "render") as render, patch("sys.argv", ["generate_profile.py"]):
@@ -79,8 +92,9 @@ class DataTests(unittest.TestCase):
 
     def test_empty_languages_render(self):
         config = {"username": "sample", "name": "Sample", "tagline": "Robotics", "skills": ["C++"], "learning": ["Rust"]}
-        data = {"languages": {}, "repository_count": 0}
-        for scene in range(6):
+        data = {"languages": {}, "repository_count": 0, "lines_added_365_days": 0,
+                "line_stats_repositories": 0}
+        for scene in range(7):
             self.assertEqual(m.frame(config, data, scene, 1).size, (960, 480))
 
 

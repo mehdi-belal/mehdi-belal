@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import tempfile
+import time
 import urllib.parse
 import urllib.request
 
@@ -30,6 +31,8 @@ def api(path):
         headers["Authorization"] = "Bearer " + os.environ["GH_TOKEN"]
     request = urllib.request.Request("https://api.github.com" + path, headers=headers)
     with urllib.request.urlopen(request, timeout=30) as response:
+        if response.status == 202:
+            return None
         return json.load(response)
 
 
@@ -58,12 +61,28 @@ def fetch_data(config):
              and (scope == "all_accessible" or not r.get("private"))
              and r["name"] not in excluded and r.get("full_name") not in excluded]
     languages = Counter()
+    lines_added = 0
+    stats_repositories = 0
+    stats_pending = 0
+    cutoff = int(time.time()) - 365 * 24 * 60 * 60
     for repo in sorted(repos, key=lambda r: r["name"]):
         repo_owner = urllib.parse.quote(repo.get("owner", {}).get("login", config["username"]), safe="")
         name = urllib.parse.quote(repo["name"], safe="")
         languages.update(api(f"/repos/{repo_owner}/{name}/languages"))
+        activity = api(f"/repos/{repo_owner}/{name}/stats/contributors")
+        if not isinstance(activity, list):
+            stats_pending += 1
+            continue
+        stats_repositories += 1
+        for contributor in activity:
+            author = contributor.get("author") or {}
+            if author.get("login", "").casefold() != config["username"].casefold():
+                continue
+            lines_added += sum(week.get("a", 0) for week in contributor.get("weeks", [])
+                               if week.get("w", 0) >= cutoff)
     return {"languages": dict(sorted(languages.items(), key=lambda item: (-item[1], item[0]))),
-            "repository_count": len(repos)}
+            "repository_count": len(repos), "lines_added_365_days": lines_added,
+            "line_stats_repositories": stats_repositories, "line_stats_pending": stats_pending}
 
 
 def font(size, bold=False):
@@ -109,7 +128,7 @@ def frame(config, data, scene, progress):
     text(120, 27, f'{config["username"]} / workspace', 17, MUTED)
     text(780, 27, "PROFILE OS", 16, ACCENT)
     d.line((28, 64, 932, 64), fill=LINE)
-    labels = ["whoami", "work --current", "academic --degrees", "toolbox --list", "github --languages", "learn --next"]
+    labels = ["whoami", "work --current", "academic --degrees", "toolbox --list", "github --languages", "git --additions --since 365d", "learn --next"]
     command = "$ " + labels[scene]
     text(44, 84, command[:max(1, int(progress*len(command)*3))], 22, ACCENT)
     if scene == 0:
@@ -165,6 +184,14 @@ def frame(config, data, scene, progress):
         if not total:
             text(44,210,"No language data available yet.",22,MUTED)
         text(44,394,f'{data["repository_count"]} public originals / bytes of code / excludes profile',16,MUTED)
+    elif scene == 5:
+        text(44, 132, "Lines of code added", 29, TEXT, True)
+        text(44, 193, f'{data.get("lines_added_365_days", 0):,}', 62, ACCENT, True)
+        text(46, 281, "lines added in the last 365 days", 23, MUTED)
+        text(46, 350, f'across {data.get("line_stats_repositories", 0)} eligible repositories', 18, MUTED)
+        pending = data.get("line_stats_pending", 0)
+        if pending:
+            text(46, 382, f"GitHub is preparing statistics for {pending} repositories", 16, "#fbbf24")
     else:
         text(44,145,"Always learning.",36,TEXT,True)
         for i, value in enumerate(config["learning"][:3]):
@@ -172,14 +199,14 @@ def frame(config, data, scene, progress):
         text(46,365,"github.com/"+config["username"],23,MUTED)
     d.line((28,433,932,433),fill=LINE)
     text(44,448,"AI / PERCEPTION / ROBOTICS",14,MUTED)
-    for i in range(6):
-        d.rounded_rectangle((773+i*28,450,789+i*28,455),radius=2,fill=ACCENT if scene==i else LINE)
+    for i in range(7):
+        d.rounded_rectangle((744+i*27,450,760+i*27,455),radius=2,fill=ACCENT if scene==i else LINE)
     return im
 
 
 def render(config, data, directory):
     frames, durations = [], []
-    for scene in range(6):
+    for scene in range(7):
         for step in range(10):
             frames.append(frame(config,data,scene,step/9).quantize(colors=64))
             durations.append(100 if step < 9 else (3100 if scene in (1,2,4) else 2300))
