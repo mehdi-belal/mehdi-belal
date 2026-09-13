@@ -186,7 +186,7 @@ def frame(config, data, scene, progress):
             text(803,y,f"{count/total:.1%}",19,ACCENT)
         if not total:
             text(44,210,"No language data available yet.",22,MUTED)
-        text(44,394,f'{data["repository_count"]} public originals / bytes of code / excludes profile',16,MUTED)
+        text(44,394,f'{data["repository_count"]} eligible repositories / bytes of code / excludes profile',16,MUTED)
     elif scene == 5:
         text(44, 132, "Lines of code added", 29, TEXT, True)
         text(44, 193, f'{data.get("lines_added_365_days", 0):,}', 62, ACCENT, True)

@@ -2,7 +2,7 @@ name: Update profile animation
 
 on:
   schedule:
-    - cron: "0 2 * * 1"
+    - cron: "17 2 * * *"
   workflow_dispatch:
   push:
     branches: [main, master, dev]
@@ -49,7 +49,10 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add profile/terminal.gif profile/data.json profile/render.sha256
-          git diff --cached --quiet && exit 0
-          git commit -m "Update profile animation"
+          if git diff --cached --quiet; then
+            git commit --allow-empty -m "Refresh profile analytics"
+          else
+            git commit -m "Update profile animation"
+          fi
           git pull --rebase
           git push

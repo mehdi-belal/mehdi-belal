@@ -26,7 +26,7 @@ the next scheduled run fills them in.
 
 ## Automatic updates
 
-`.github/workflows/update_profile.yml` runs Mondays at 02:00 UTC, manually, and
+`.github/workflows/update_profile.yml` runs daily at 02:17 UTC (06:17 Dubai), manually, and
 when renderer/configuration files change on main, master, or dev. It installs Pillow
 and DejaVu fonts, runs tests, fetches data using the `PROFILE_ANALYTICS_TOKEN`
 repository secret, and commits changed output. In `all_accessible` mode, this
@@ -36,9 +36,10 @@ push to the default branch.
 
 The output is `profile/terminal.gif`, a 960 × 480, approximately 22-second loop,
 plus a public data snapshot and a rendering fingerprint. Unchanged
-content is skipped. Fetch/render failures happen before outputs are replaced, so
-the previous GIF remains usable. Renderer, Pillow, and font changes also invalidate
-the fingerprint.
+content receives an empty `Refresh profile analytics` commit, so the daily run is
+always recorded on the default branch. Fetch/render failures happen before outputs
+are replaced, so the previous GIF remains usable. Renderer, Pillow, and font changes
+also invalidate the fingerprint.
 
 ## Run locally
 
