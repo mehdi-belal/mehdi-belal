@@ -11,7 +11,7 @@
     "Cython": 2532530,
     "Shell": 1341456,
     "TeX": 1126197,
-    "TypeScript": 921851,
+    "TypeScript": 946055,
     "HTML": 845888,
     "Linker Script": 592863,
     "Dart": 510527,
@@ -21,13 +21,14 @@
     "Java": 159543,
     "Kotlin": 73940,
     "Groovy": 61337,
+    "CSS": 52210,
     "Swift": 48416,
     "PLpgSQL": 47666,
-    "CSS": 43735,
     "Dockerfile": 42981,
     "Fortran": 40333,
+    "JavaScript": 38543,
     "Meson": 38042,
-    "JavaScript": 38032,
+    "Astro": 35822,
     "EmberScript": 30234,
     "Jupyter Notebook": 16723,
     "HLSL": 14850,
@@ -45,8 +46,8 @@
     "Scheme": 102,
     "GDB": 41
   },
-  "repository_count": 136,
-  "lines_added_365_days": 57845,
-  "line_stats_repositories": 124,
-  "line_stats_pending": 12
+  "repository_count": 137,
+  "lines_added_365_days": 90108,
+  "line_stats_repositories": 128,
+  "line_stats_pending": 9
 }
