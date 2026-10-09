@@ -28,6 +28,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.PROFILE_ANALYTICS_TOKEN }}
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
@@ -46,8 +48,8 @@ jobs:
         run: python scripts/generate_profile.py
       - name: Commit animation
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.name 'mehdi-belal'
+          git config user.email 'mehdi.belal@gmail.com'
           git add profile/terminal.gif profile/data.json profile/render.sha256
           if git diff --cached --quiet; then
             git commit --allow-empty -m "Refresh profile analytics"

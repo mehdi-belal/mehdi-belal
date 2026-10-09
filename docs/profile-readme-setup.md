@@ -34,6 +34,13 @@ token is required and must be authorized for every private or organization
 repository intended for inclusion. Repository rules must allow the workflow to
 push to the default branch.
 
+Commits use `mehdi-belal <mehdi.belal@gmail.com>`, matching the account's existing
+commits. Checkout and pushes authenticate with `PROFILE_ANALYTICS_TOKEN`, so the
+token must belong to `mehdi-belal` and allow writing to this profile repository.
+A classic token with `repo` scope covers this; a fine-grained token needs Contents
+read/write permission on the profile repository. The commit email must be verified
+on the GitHub account for attribution.
+
 The output is `profile/terminal.gif`, a 960 × 480, approximately 22-second loop,
 plus a public data snapshot and a rendering fingerprint. Unchanged
 content receives an empty `Refresh profile analytics` commit, so the daily run is
