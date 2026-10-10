@@ -1,17 +1,17 @@
 {
   "languages": {
-    "C++": 90825448,
-    "Python": 73341192,
-    "C": 37633793,
+    "C++": 90873364,
+    "Python": 73339466,
+    "C": 37633858,
     "Makefile": 16389560,
-    "CMake": 9135967,
+    "CMake": 9139321,
     "C#": 8854254,
     "MATLAB": 3903207,
     "SWIG": 2991828,
     "Cython": 2532530,
     "Shell": 1341456,
     "TeX": 1126117,
-    "TypeScript": 946055,
+    "TypeScript": 946629,
     "HTML": 845888,
     "Linker Script": 592863,
     "Dart": 510527,
@@ -19,7 +19,7 @@
     "ShaderLab": 260050,
     "PowerShell": 173486,
     "Java": 159543,
-    "Kotlin": 73940,
+    "Kotlin": 74400,
     "Groovy": 61337,
     "CSS": 52210,
     "Swift": 48416,
@@ -46,8 +46,8 @@
     "Scheme": 102,
     "GDB": 41
   },
-  "repository_count": 138,
-  "lines_added_365_days": 90110,
-  "line_stats_repositories": 129,
-  "line_stats_pending": 9
+  "repository_count": 141,
+  "lines_added_365_days": 57847,
+  "line_stats_repositories": 126,
+  "line_stats_pending": 15
 }
