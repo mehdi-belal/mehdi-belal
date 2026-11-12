@@ -1,15 +1,15 @@
 {
   "languages": {
-    "C++": 91508005,
-    "Python": 73580395,
+    "C++": 91548071,
+    "Python": 73636537,
     "C": 37633858,
     "Makefile": 16934653,
-    "CMake": 9306506,
+    "CMake": 9309573,
     "C#": 8854254,
     "MATLAB": 3903207,
     "SWIG": 2991828,
     "Cython": 2532530,
-    "Shell": 1342503,
+    "Shell": 1344759,
     "TeX": 1129443,
     "TypeScript": 954336,
     "HTML": 845888,
@@ -46,8 +46,8 @@
     "Lua": 139,
     "GDB": 41
   },
-  "repository_count": 146,
-  "lines_added_365_days": 171827,
-  "line_stats_repositories": 133,
-  "line_stats_pending": 13
+  "repository_count": 147,
+  "lines_added_365_days": 196130,
+  "line_stats_repositories": 132,
+  "line_stats_pending": 15
 }
