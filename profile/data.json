@@ -1,10 +1,10 @@
 {
   "languages": {
-    "C++": 93182651,
+    "C++": 93187357,
     "Python": 73899953,
     "C": 37638387,
     "Makefile": 16934653,
-    "CMake": 9347421,
+    "CMake": 9348223,
     "C#": 8854254,
     "MATLAB": 3903207,
     "SWIG": 2991828,
@@ -47,7 +47,7 @@
     "GDB": 41
   },
   "repository_count": 151,
-  "lines_added_365_days": 193631,
-  "line_stats_repositories": 134,
-  "line_stats_pending": 17
+  "lines_added_365_days": 224424,
+  "line_stats_repositories": 141,
+  "line_stats_pending": 10
 }
