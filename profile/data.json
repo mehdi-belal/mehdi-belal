@@ -1,17 +1,17 @@
 {
   "languages": {
     "C++": 93187357,
-    "Python": 73899953,
+    "Python": 73927241,
     "C": 37638387,
-    "Makefile": 16934653,
+    "Makefile": 16935340,
     "CMake": 9348223,
     "C#": 8854254,
     "MATLAB": 3903207,
     "SWIG": 2991828,
     "Cython": 2532530,
     "Shell": 1345742,
-    "TeX": 1129443,
-    "TypeScript": 994862,
+    "TeX": 1168148,
+    "TypeScript": 1000933,
     "HTML": 870344,
     "Linker Script": 592863,
     "Dart": 510527,
@@ -24,7 +24,7 @@
     "CSS": 52210,
     "Swift": 48416,
     "PLpgSQL": 47666,
-    "Dockerfile": 44497,
+    "Dockerfile": 45403,
     "JavaScript": 43339,
     "Fortran": 40333,
     "Meson": 38042,
@@ -33,8 +33,8 @@
     "Jupyter Notebook": 16723,
     "HLSL": 14850,
     "Roff": 13266,
+    "Perl": 11976,
     "Ruby": 11948,
-    "Perl": 11757,
     "GDScript": 11547,
     "M": 9506,
     "Tcl": 5778,
@@ -46,8 +46,8 @@
     "Lua": 139,
     "GDB": 41
   },
-  "repository_count": 151,
-  "lines_added_365_days": 224424,
-  "line_stats_repositories": 141,
-  "line_stats_pending": 10
+  "repository_count": 152,
+  "lines_added_365_days": 16101358,
+  "line_stats_repositories": 138,
+  "line_stats_pending": 14
 }
